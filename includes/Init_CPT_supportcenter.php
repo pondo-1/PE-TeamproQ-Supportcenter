@@ -96,7 +96,7 @@ class PE_Initializ_CTP{
       'has_archive'        => false,
       'hierarchical'       => true,
       'menu_position'      => 50, //50 – below page
-      'supports'           => array( 'title', 'author', 'thumbnail', 'excerpt', 'page-attributes'), //diasabled editor to avoid gutenberg
+      'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'page-attributes'),
       // 'taxonomies'         => array( 'theme' ),
       'show_in_rest'       => true // it is for gutenberg, but let it 
     );
@@ -157,3 +157,12 @@ function supportcenter_json_generator($data) {
   }
 
 }
+
+
+// Disable Gutenberg for supportcenter post type
+add_filter('use_block_editor_for_post_type', function ($use_block_editor, $post_type) {
+    if ($post_type === 'supportcenter') {
+        return false;
+    }
+    return $use_block_editor;
+}, 10, 2);
