@@ -1,0 +1,27 @@
+{
+  "name": "pe-teamproq-supportcenter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "dev": "wp-scripts start",
+    "devFast": "wp-scripts start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Diane-Kang/PE-TeamproQ-Supportcenter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Diane-Kang/PE-TeamproQ-Supportcenter/issues"
+  },
+  "homepage": "https://github.com/Diane-Kang/PE-TeamproQ-Supportcenter#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^25.5.1"
+  }
+}
