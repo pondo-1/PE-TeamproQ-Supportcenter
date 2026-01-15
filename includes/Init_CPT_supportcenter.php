@@ -35,9 +35,9 @@ class PE_Initializ_CTP{
     }); 
 
     add_action( 'rest_api_init', array($this,'private_json_api'));
-    //create a custom taxonomy 
-    //hook into the init action and call create_xy_taxonomies when it fires
-    // add_action( 'init', array($this, 'create_custom_taxonomy_theme'));
+    //create custom taxonomies 
+    //hook into the init action and call create_taxonomies when it fires
+    add_action( 'init', array($this, 'create_custom_taxonomies'));
   }
 
   function cbt_admin_posts_filter( $query ) {
@@ -102,6 +102,58 @@ class PE_Initializ_CTP{
     );
   
     register_post_type( 'supportcenter', $args );
+  }
+
+  function create_custom_taxonomies() {
+    // Register Support User Role Taxonomy
+    $userrole_labels = array(
+      'name'              => _x( 'Support User Roles', 'taxonomy general name' ),
+      'singular_name'     => _x( 'Support User Role', 'taxonomy singular name' ),
+      'search_items'      => __( 'Search User Roles' ),
+      'all_items'         => __( 'All User Roles' ),
+      'edit_item'         => __( 'Edit User Role' ),
+      'update_item'       => __( 'Update User Role' ),
+      'add_new_item'      => __( 'Add New User Role' ),
+      'new_item_name'     => __( 'New User Role Name' ),
+      'menu_name'         => __( 'User Roles' ),
+    );
+
+    $userrole_args = array(
+      'hierarchical'      => true,
+      'labels'            => $userrole_labels,
+      'show_ui'           => true,
+      'show_admin_column' => true,
+      'query_var'         => true,
+      'show_in_rest'      => true,
+      'rewrite'           => array( 'slug' => 'support-userrole' ),
+    );
+
+    register_taxonomy( 'support_userrole', array( 'supportcenter' ), $userrole_args );
+
+    // Register Support Module Taxonomy
+    $module_labels = array(
+      'name'              => _x( 'Support Modules', 'taxonomy general name' ),
+      'singular_name'     => _x( 'Support Module', 'taxonomy singular name' ),
+      'search_items'      => __( 'Search Modules' ),
+      'all_items'         => __( 'All Modules' ),
+      'edit_item'         => __( 'Edit Module' ),
+      'update_item'       => __( 'Update Module' ),
+      'add_new_item'      => __( 'Add New Module' ),
+      'new_item_name'     => __( 'New Module Name' ),
+      'menu_name'         => __( 'Modules' ),
+    );
+
+    $module_args = array(
+      'hierarchical'      => true,
+      'labels'            => $module_labels,
+      'show_ui'           => true,
+      'show_admin_column' => true,
+      'query_var'         => true,
+      'show_in_rest'      => true,
+      'rewrite'           => array( 'slug' => 'support-module' ),
+    );
+
+    register_taxonomy( 'support_module', array( 'supportcenter' ), $module_args );
   }
 
   function add_new_header_text_column($header_text_columns) {
