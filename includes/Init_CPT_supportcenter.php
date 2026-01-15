@@ -96,7 +96,7 @@ class PE_Initializ_CTP{
       'has_archive'        => false,
       'hierarchical'       => true,
       'menu_position'      => 50, //50 – below page
-      'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'page-attributes'),
+      'supports'           => array( 'title', 'author', 'thumbnail', 'excerpt', 'page-attributes'), //diasabled editor to avoid gutenberg
       // 'taxonomies'         => array( 'theme' ),
       'show_in_rest'       => true // it is for gutenberg, but let it 
     );
