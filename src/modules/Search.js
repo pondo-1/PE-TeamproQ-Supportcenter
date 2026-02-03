@@ -30,6 +30,8 @@ class Search {
 					this.resultsDiv.innerHTML =
 						'<div class="spinner-loader"></div>';
 					this.isSpinnerVisible = true;
+					// Update ARIA attributes for accessibility
+					this.searchField.setAttribute( 'aria-expanded', 'true' );
 				}
 				this.typingTimer = setTimeout(
 					this.getResults.bind( this ),
@@ -38,6 +40,8 @@ class Search {
 			} else {
 				this.resultsDiv.innerHTML = '';
 				this.isSpinnerVisible = false;
+				// Update ARIA attributes for accessibility
+				this.searchField.setAttribute( 'aria-expanded', 'false' );
 			}
 		}
 		this.previousValue = this.searchField.value;
@@ -80,7 +84,7 @@ class Search {
 					this.resultsDiv.innerHTML = results
 						.map(
 							( item ) => `
-            <div>
+            <div class="search-result-item">
               <a class="${
 					this.currentPageModul == item.modul.slug
 						? 'anchorToThisPage'

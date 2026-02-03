@@ -3,7 +3,7 @@
 Plugin Name: Customized Supportcenter - TeamProQ by Page-Effect 
 Plugin URI: 
 Description: This plugin for customized supportcenter pages
-Version: 1.0.1
+Version: 1.0.2
 Author: Page-Effect 
 Author URI: page-effect.de
 */

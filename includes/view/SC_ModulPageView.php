@@ -18,8 +18,6 @@ $postId = get_the_ID();
   //only for supportcenter ctp && only for modul(no parent) 
   if(is_singular( 'supportcenter' ) && !get_post_parent($postId)){
     $supportcenter_header = supportcenter_header();
-    // modul description 
-    $modul_description = supportcenter_modul_description($postId);
     // Child Posts
     $children_contents = supportcenter_get_children_contents($postId);
     //scroll button
@@ -27,7 +25,7 @@ $postId = get_the_ID();
     // module Überblick 
     $modul_ueberblick = supportcenter_module_ueberblick();
     //modify the incoming content 
-    $content = $supportcenter_header . $breadcrumbs . $modul_description. $children_contents. $modul_ueberblick . $scroll_button;
+    $content = $supportcenter_header . $breadcrumbs . $children_contents. $modul_ueberblick . $scroll_button;
   } 
   return $content; 
 }

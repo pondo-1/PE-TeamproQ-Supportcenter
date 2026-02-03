@@ -2,8 +2,11 @@
 .breadcrumbs {
   display: flex;
   align-items: center;
-  font-size: 1.1em;
-  font-weight: bold;
+  font-size: 1.6em;
+  // text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 2;
+  text-decoration: dotted underline;
 
   > div {
     display: flex;
@@ -12,10 +15,6 @@
 
   i {
     font-size: 1.5em;
-  }
-
-  a {
-    color: #555;
   }
 
   div:last-child :last-child {

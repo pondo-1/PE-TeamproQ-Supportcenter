@@ -43,7 +43,7 @@ function supportcenter_get_children_contents($postId){
   $title_list = '<div class="title-wrapper"><ul>'.$title_list.'</ul></div>';
   $content_list = '<div class="qanda-wrapper">'.$content_list.'</div>';
   
-  $children_contents = '<section class="faq"><div class="container"><div class="q_and_a_contents">'.$title_list.$content_list.'</div></div></section>';
+  $children_contents = '<section class="faq module"><div class="outter-container p-top--medium p-bottom--medium"><div class="container"><div class="q_and_a_contents">'.$title_list.$content_list.'</div></div></div></section>';
   return $children_contents;
 }
 
@@ -51,7 +51,7 @@ function supportcenter_get_children_contents($postId){
 function supportcenter_modul_description($postId){            
   $icon = '<div class="icon-and-capture"><i class="tpq-icon-font '. get_post_meta($postId, 'icon_class', true) .'"></i></div>';
   $content = '<div class="modul_content">'.get_the_content($postId).'</div>';
-  $modul_description_html = '<section class="modul-description"><div class="container">' . $icon . $content. '</div></section>';
+  $modul_description_html = '<div class="modul-description">' . $icon . $content. '</div>';
   return $modul_description_html;
 }
 
@@ -62,12 +62,11 @@ function supportcenter_header() {
   $header_html='';  
   // Breadcrumbs generation
   $breadcrumbs = "";
-  $bc_startseite = '<a href="/">Startseite</a>';
-  $bc_supportcenter = '<a href="/supportcenter/">Supportcenter</a>';
+  $bc_startseite = '<a class="breadcrumb-item" href="/">Startseite</a>';
+  $bc_supportcenter = '<a class="breadcrumb-item" href="/supportcenter/">Supportcenter</a>';
   
   if(is_singular('supportcenter')){
-    $bc_current = '<div>'. $post->post_title. '</div>';
-    $breadcrumbs .= '<div>' . $bc_supportcenter .'</div><div>'. $bc_current. '</div>';
+    $breadcrumbs .= '<div>' . $bc_supportcenter .'</div>';
   }
   $breadcrumbs_html = '<div class="breadcrumbs">'. $breadcrumbs.'</div>';
     $supportcenter_description = '
@@ -76,13 +75,27 @@ function supportcenter_header() {
     </h3>
   ';
   $searchbox = '
-    <div class="search-wrapper container">
-      <div class="searchbox">
-        <input type="search" id="search-term" placeholder="Wie können wir Ihnen helfen?">
-        <button><i class="et-pb-icon">&#x55;</i></button>
+    <section class="search-wrapper container" role="search" aria-label="Support-Center Suche">
+      <form class="searchbox" role="search" action="#" method="get">
+        <label for="search-term" class="sr-only">Suchbegriff eingeben</label>
+        <input 
+          type="search" 
+          id="search-term" 
+          name="q"
+          placeholder="Wie können wir Ihnen helfen?"
+          aria-describedby="search-results"
+          autocomplete="off"
+          aria-expanded="false"
+          aria-haspopup="listbox">
+      </form>
+      <div 
+        class="search-results" 
+        id="search-results"
+        role="listbox"
+        aria-label="Suchergebnisse"
+        aria-live="polite">
       </div>
-      <div class="search-results" id="search-results">
-      </div>
+    </section>
     </div>
   ';
   
@@ -96,14 +109,19 @@ function supportcenter_header() {
   }
   //for supportcenter ctp and only for modul
   else if( is_singular( 'supportcenter' ) && !get_post_parent($postId)){
-    $header_title = '<div class="container">' . $breadcrumbs_html . '
+    // Add modul description to header
+    $icon = '<div class="icon-and-capture"><i class="tpq-icon-font '. get_post_meta($postId, 'icon_class', true) .'"></i></div>';
+    $content = '<div class="modul_content">'.get_the_content($postId).'</div>';
+    $modul_description = '<div class="modul-description">' . $icon . $content. '</div>';
+    
+    $header_title = '<div class="outter-container p-top--medium p-bottom--medium"><div class="container ">' . $breadcrumbs_html . '
     <div class="supportcenter_title_container">
       <h1 class="entry-title">Modul '.get_the_title($postId).'</h1>
-    </div> </div>
+    </div>' . $modul_description . '</div>
   ';
   }
   $header_html = $header_title . $searchbox;
-return '<header class="supportcenter_header">' . $header_html . '</header>';
+return '<header class="supportcenter_header module bg--blue-dark">' . $header_html . '</header>';
 }
 
 
