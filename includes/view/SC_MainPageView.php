@@ -17,11 +17,9 @@ function supportcenter_mainpage_view($content){
   //only for supportcenter ctp and only for modul 
   if(is_page( 'supportcenter' )){
     $supportcenter_header = supportcenter_header();
-    // breadcrumms
-    $breadcrumms = supportcenter_breadcrumms(); 
     // module Überblick 
     $modul_ueberblick = supportcenter_module_ueberblick();
-    $content = $supportcenter_header . $breadcrumms . $modul_ueberblick;
+    $content = $supportcenter_header . $modul_ueberblick;
   } 
   return $content; 
 }

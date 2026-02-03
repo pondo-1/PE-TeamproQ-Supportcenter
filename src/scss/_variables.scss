@@ -1,18 +1,33 @@
 // SCSS Variables für Supportcenter Plugin
-// Farben
-$primary-color: #007cba;
-$secondary-color: #666;
-$accent-color: #f0f0f1;
-$text-color: #333;
-$background-color: #fff;
-$border-color: #ddd;
+// Theme-konsistente Farben (aus resp2024)
 
-// Breakpoints
-$mobile: 320px;
-$tablet: 768px;
-$desktop: 1024px;
-$large-desktop: 1200px;
-$xl-desktop: 1920px;
+// Hauptfarben (Blue System)
+$primary-color: #005b94; // c-blue-middle
+$primary-dark: #002f4d; // c-blue-dark
+$primary-light: #e5f5ff; // c-blue-light
+$accent-color: #009fe3; // color-blue-light
+$accent-dark: #0064a3; // color-blue-dark
+
+// Green System (für Buttons/Actions)
+$success-color: #256827; // c-green-middle
+$success-dark: #143815; // c-green-dark
+$success-light: #ecf8ed; // c-green-light
+
+// Text & Content
+$text-color: #262626; // c-gray-dark
+$text-secondary: #333333; // c-gray-dark2
+$text-light: #4d4d4d; // c-gray-middle
+$background-color: #fff; // c-white
+$background-light: #f2f2f2; // c-gray-light
+$border-color: #e3e3e3; // color-gray-light
+
+// Breakpoints (aus Theme übernommen)
+$bp-mobile: 400px; // bp-last
+$bp-smallfont: 600px; // bp-smallfont
+$bp-tablet: 900px; // bp-tablet
+$bp-desktop: 1250px; // bp-largest
+$bp-large-desktop: 1440px; // bp-desktop
+$bp-xl-desktop: 1920px; // body-max-width
 
 // Spacing
 $spacing-xs: 0.5rem;
@@ -20,6 +35,8 @@ $spacing-sm: 1rem;
 $spacing-md: 1.5rem;
 $spacing-lg: 2rem;
 $spacing-xl: 3rem;
+$colunm-gap-small: 2rem; // aus Theme
+$colunm-gap-big: 4rem; // aus Theme
 
 // Typography
 $font-family-base: "lato", sans-serif;
@@ -28,9 +45,13 @@ $line-height-base: 1.5;
 
 // Border radius
 $border-radius-sm: 5px;
-$border-radius-md: 10px;
+$border-radius-md: 8px; // aus Theme box-design
 $border-radius-lg: 30px;
 
-// Container
+// Container (aus Theme übernommen)
 $container-width: 90%;
-$container-max-width: 1200px;
+$container-max-width: 1140px; // content-width-normal
+$body-max-width: 1920px; // aus Theme
+
+// Header
+$header-height: 130px; // aus Theme übernommen

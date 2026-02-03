@@ -3,7 +3,7 @@
 */
 
 /* redefine my container size, font-size, basic text properties*/
-#page-container #main-content .container {
+.main .container {
   width: 90%;
   /* wenn Viewwidth 1920px ist, dann ist die Fontsize 16px, wenn Viewwidth 320px ist, dann ist die Fontsize 12px */
   font-size: calc(14px + 2 * (100vw - 320px) / 1600);
@@ -158,27 +158,25 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 /*
-** breadcrumms **
+** breadcrumbs **
 */
-.breadcrumms {
+.breadcrumbs {
   display: flex;
   align-items: center;
   font-size: 1.1em;
   font-weight: bold;
-  margin-left: 7%;
 }
-.breadcrumms > div {
+.breadcrumbs > div {
   display: flex;
   align-items: center;
 }
-.breadcrumms i {
+.breadcrumbs i {
   font-size: 1.5em;
 }
-.breadcrumms a {
+.breadcrumbs a {
   color: #555;
 }
-.breadcrumms div:last-child :last-child {
-  color: #f39200;
+.breadcrumbs div:last-child :last-child {
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -245,7 +243,7 @@ body .icon-and-capture i {
     width: unset;
     max-width: 950px;
   }
-  .breadcrumms {
+  .breadcrumbs {
     margin-left: 2%;
   }
 }
@@ -269,7 +267,7 @@ body .icon-and-capture i {
   body .icon-and-capture i {
     font-size: 2.375em;
   }
-  .breadcrumms {
+  .breadcrumbs {
     flex-wrap: wrap;
   }
   .icon-text-wrapper p {

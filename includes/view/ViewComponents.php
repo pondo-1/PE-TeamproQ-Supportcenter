@@ -43,7 +43,7 @@ function supportcenter_get_children_contents($postId){
   $title_list = '<div class="title-wrapper"><ul>'.$title_list.'</ul></div>';
   $content_list = '<div class="qanda-wrapper">'.$content_list.'</div>';
   
-  $children_contents = '<div class="q_and_a_contents">'.$title_list.$content_list.'</div>';
+  $children_contents = '<section class="faq"><div class="container"><div class="q_and_a_contents">'.$title_list.$content_list.'</div></div></section>';
   return $children_contents;
 }
 
@@ -51,7 +51,7 @@ function supportcenter_get_children_contents($postId){
 function supportcenter_modul_description($postId){            
   $icon = '<div class="icon-and-capture"><i class="tpq-icon-font '. get_post_meta($postId, 'icon_class', true) .'"></i></div>';
   $content = '<div class="modul_content">'.get_the_content($postId).'</div>';
-  $modul_description_html = '<div class="modul-description">'.$icon . $content. '</div>';
+  $modul_description_html = '<section class="modul-description"><div class="container">' . $icon . $content. '</div></section>';
   return $modul_description_html;
 }
 
@@ -59,14 +59,24 @@ function supportcenter_modul_description($postId){
 function supportcenter_header() {
   global $post;
   $postId = $post->ID;
-  $header_html='';
-  $supportcenter_description = '
+  $header_html='';  
+  // Breadcrumbs generation
+  $breadcrumbs = "";
+  $bc_startseite = '<a href="/">Startseite</a>';
+  $bc_supportcenter = '<a href="/supportcenter/">Supportcenter</a>';
+  
+  if(is_singular('supportcenter')){
+    $bc_current = '<div>'. $post->post_title. '</div>';
+    $breadcrumbs .= '<div>' . $bc_supportcenter .'</div><div>'. $bc_current. '</div>';
+  }
+  $breadcrumbs_html = '<div class="breadcrumbs">'. $breadcrumbs.'</div>';
+    $supportcenter_description = '
     <h3 class="supportcenter_mainpage_content">
       '.get_the_content($postId).'
     </h3>
   ';
   $searchbox = '
-    <div class="search-wrapper">
+    <div class="search-wrapper container">
       <div class="searchbox">
         <input type="search" id="search-term" placeholder="Wie können wir Ihnen helfen?">
         <button><i class="et-pb-icon">&#x55;</i></button>
@@ -76,47 +86,26 @@ function supportcenter_header() {
     </div>
   ';
   
-  $bottom_decoration = '<div class="bottom_inside_divider"></div>';
 
   if ( is_page('supportcenter')){
     $header_title = '
-    <div class="supportcenter_title_container">
+    <div class="supportcenter_title_container container">
       <h1 class="entry-title">'.get_the_title($postId).'</h1>
     </div>
   ';
   }
   //for supportcenter ctp and only for modul
   else if( is_singular( 'supportcenter' ) && !get_post_parent($postId)){
-    $header_title = '
+    $header_title = '<div class="container">' . $breadcrumbs_html . '
     <div class="supportcenter_title_container">
       <h1 class="entry-title">Modul '.get_the_title($postId).'</h1>
-    </div>
+    </div> </div>
   ';
   }
   $header_html = $header_title . $searchbox;
-  // add bottom decoration 
-  $header_html = $background_image . $header_html . $bottom_decoration; 
-
-return '<div class="supportcenter_header">' . $header_html . '</div>';
+return '<header class="supportcenter_header">' . $header_html . '</header>';
 }
 
-
-function supportcenter_breadcrumms(){
-  // this is only for the suppportcenter 
-  global $post;
-  $breadcrumms = "";
-  $icon = '<i class="et-pb-icon">&#x35;</i>';
-  $bc_startseite = '<a href="/">Startseite</a>';
-  $bc_supportcenter = '<a href="/supportcenter/">Supportcenter</a>';
-  
-  if(is_singular('supportcenter')){
-    $bc_current  = '<div>'. $post->post_title. '</div>';
-    $breadcrumms .= '<div>' . $bc_supportcenter .'</div><div>'.$icon . $bc_current. '</div>';
-  }
-  //wrap breadcrumms in wrapper 
-  $breadcrumms = '<div class="breadcrumms">'. $breadcrumms.'</div>';
-  return $breadcrumms;
-}
 
 function supportcenter_module_ueberblick(){
   $section_title = "<h2>Alle Module im Überblick</h2>";

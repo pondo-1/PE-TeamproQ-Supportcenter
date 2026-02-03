@@ -1,11 +1,21 @@
 {
   "name": "pe-teamproq-supportcenter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
     "start": "wp-scripts start",
+    "build:production": "NODE_ENV=production wp-scripts build",
+    "clean": "rm -rf build node_modules",
+    "clean:build": "rm -rf build",
+    "lint": "wp-scripts lint-js src/",
+    "lint:fix": "wp-scripts lint-js src/ --fix",
+    "release": "node scripts/production-release.js",
+    "release:minor": "node scripts/production-release.js minor",
+    "release:major": "node scripts/production-release.js major",
+    "pack": "npm run package:plugin",
+    "package:plugin": "node scripts/production-release.js",
     "dev": "wp-scripts start",
     "devFast": "wp-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,9 +33,11 @@
   "homepage": "https://github.com/Diane-Kang/PE-TeamproQ-Supportcenter#readme",
   "devDependencies": {
     "@wordpress/scripts": "^25.5.1",
+    "archiver": "^7.0.1",
     "css-loader": "^7.1.3",
     "sass": "^1.97.3",
     "sass-loader": "^16.0.6",
+    "semver": "^7.7.3",
     "style-loader": "^4.0.0"
   }
 }
