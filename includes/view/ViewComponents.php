@@ -1,3 +1,4 @@
+
 <?php
 function get_scroll_button_html(){
   $up_arrow_icon = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve">
@@ -14,8 +15,7 @@ function get_scroll_button_html(){
 return $scroll_button_html;
 }
 
-function supportcenter_get_childern_contents($postId){
-
+function supportcenter_get_children_contents($postId){
   $args = array(
     'post_type' => 'supportcenter',
     'post_parent' => $postId,
@@ -23,12 +23,14 @@ function supportcenter_get_childern_contents($postId){
     'orderby' => 'menu_order',
     'order' => 'ASC',
     ); 
-  $childern = get_children( $args);
+  $children = get_children( $args);
   $title_list='';
   $content_list = '';
-  
-  if ( $childern ) {
-    foreach ( $childern as $child ) {
+
+  if ( $children ) {
+    foreach ( $children as $child ) {
+    
+
       $title_list .= '<li><a href="#'. $child->post_name .'">'.$child->post_title.'</a></li>';
       $content_list .= '
       <div class="single" id ='.'>'.'
@@ -41,8 +43,8 @@ function supportcenter_get_childern_contents($postId){
   $title_list = '<div class="title-wrapper"><ul>'.$title_list.'</ul></div>';
   $content_list = '<div class="qanda-wrapper">'.$content_list.'</div>';
   
-  $childern_contents = '<div class="q_and_a_contents">'.$title_list.$content_list.'</div>';
-  return $childern_contents;
+  $children_contents = '<div class="q_and_a_contents">'.$title_list.$content_list.'</div>';
+  return $children_contents;
 }
 
 
@@ -73,15 +75,7 @@ function supportcenter_header() {
       </div>
     </div>
   ';
-  $background_image = '
-    <div class="bg_wrap">
-      <div class="background-pattern" 
-        style="
-          background-image: 
-            url(&quot;'.plugin_dir_url( __FILE__ ).'asset/Sechsecke.svg&quot;);">
-      </div>
-    </div>
-  ';
+  
   $bottom_decoration = '<div class="bottom_inside_divider"></div>';
 
   if ( is_page('supportcenter')){

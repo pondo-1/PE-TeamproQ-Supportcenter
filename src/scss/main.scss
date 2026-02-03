@@ -1,0 +1,7 @@
+// Main SCSS file - Entry point
+@import "variables";
+@import "base/base";
+@import "components/header";
+@import "components/search";
+@import "pages/main-page";
+@import "pages/module-page";

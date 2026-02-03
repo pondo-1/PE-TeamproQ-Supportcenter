@@ -1,0 +1,28 @@
+// Base styles und Reset
+* {
+  box-sizing: border-box;
+}
+
+// Container-Stile
+#page-container #main-content .container {
+  width: $container-width;
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+}
+
+// Listen-Styles
+li {
+  list-style-position: outside;
+}
+
+// Grundlegende Paragraph-Styles
+.supportcenter {
+  p {
+    text-align: justify;
+  }
+
+  // Spezifische Regel für Q&A Content
+  .q_and_a_contents .answer p {
+    padding-bottom: 1em;
+  }
+}

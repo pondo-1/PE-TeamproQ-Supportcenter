@@ -47,6 +47,30 @@ if (!(isset($initialize_ctp) && is_a($initialize_ctp, 'PE_Initializ_CTP'))) {
 require_once plugin_dir_path(__FILE__) . 'includes/view/SC_MainPageView.php';
 require_once plugin_dir_path(__FILE__) . 'includes/view/SC_ModulPageView.php';
 
+// Template loader for custom post type
+class PE_Template_Loader {
+  public function __construct() {
+    add_filter('single_template', array($this, 'load_supportcenter_template'));
+  }
+  
+  public function load_supportcenter_template($template) {
+    global $post;
+    
+    // Überprüfe ob es ein supportcenter Custom Post Type ist
+    if ($post->post_type == PE_SC_CTP_name) {
+      // Plugin Template-Datei verwenden
+      $plugin_template = plugin_dir_path(__FILE__) . 'templates/single-supportcenter.php';
+      
+      // Überprüfe ob die Plugin Template-Datei existiert
+      if (file_exists($plugin_template)) {
+        return $plugin_template;
+      }
+    }
+    
+    return $template;
+  }
+}
+$pe_template_loader = new PE_Template_Loader();
 
 class PE_style_and_js{
   public function __construct(){
@@ -56,7 +80,8 @@ class PE_style_and_js{
   public function style_and_script(){
     // for all Supportcenter Pages
     if(is_page( PE_SC_Main_Page_slug ) || is_singular( PE_SC_CTP_name )){
-      wp_enqueue_style('supportcenter-overall-css',  plugin_dir_url( __FILE__ ) .'includes/view/SC_All.css','','',false);
+      // Enqueue compiled CSS from build directory
+      wp_enqueue_style('supportcenter-overall-css',  plugin_dir_url( __FILE__ ) .'build/index.css','','',false);
       wp_enqueue_script('modules-js',  plugin_dir_url( __FILE__ ) .'build/index.js','jQuery','',true);
       
       wp_localize_script('modules-js', 'scData' , array(
@@ -64,14 +89,8 @@ class PE_style_and_js{
         'currentModul' => get_post_field( 'post_name', get_post() ),
       ));
 
-      // only Suppportcenter Main 
-      if(is_page( PE_SC_Main_Page_slug )){
-        wp_enqueue_style('supportcenter-mainpage-css',  plugin_dir_url( __FILE__ ) .'includes/view/SC_MainPage.css','','',false);
-      }
-      // only Suppportcenter Module
-      else if(is_singular( PE_SC_CTP_name )){
-        wp_enqueue_style('supportcenter-mainpage-css',  plugin_dir_url( __FILE__ ) .'includes/view/SC_ModulePage.css','','',false);
-      }
+      // CSS wird jetzt über SCSS kompiliert und in build/index.css bereitgestellt
+      // Separate Dateien für Main und Module Page sind nicht mehr nötig
     }
     if(is_singular( PE_SC_CTP_name )){
       wp_enqueue_script('supportcenter-js',  plugin_dir_url( __FILE__ ) .'includes/js_functions.js','','',true);

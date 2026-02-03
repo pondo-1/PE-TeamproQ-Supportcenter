@@ -1,0 +1,66 @@
+// Module Page Styles
+
+// Module description
+.modul-description {
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+  padding: 5em 0em 7em 0em;
+
+  div:nth-child(2) {
+    font-size: 1.5em;
+    line-height: 1.25em;
+    font-weight: 700;
+    width: 24em;
+    color: #4a4a49;
+  }
+}
+
+// Q and A block
+.q_and_a_contents {
+  display: grid;
+  grid-template-columns: 3.5fr 6.5fr;
+  grid-gap: 5vw;
+  background: linear-gradient(#00000015, #00000015) center/2px 100% no-repeat;
+  background-position: 35% 0;
+  margin-right: 8vw;
+
+  .title-wrapper {
+    li {
+      list-style: none;
+      font-size: 1.2em;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+      line-height: 1.5em;
+      margin-bottom: 1em;
+    }
+  }
+}
+
+#left-area .title-wrapper ul {
+  padding: 0;
+}
+
+.qanda-wrapper {
+  ul {
+    margin-left: 1rem;
+  }
+
+  ol {
+    margin-left: 2rem;
+  }
+
+  .single .question {
+    font-size: 2em;
+    line-height: 1.2em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+  }
+
+  .single .answer {
+    font-size: 1.2em;
+    line-height: 1.5em;
+    margin-bottom: 4em;
+  }
+}

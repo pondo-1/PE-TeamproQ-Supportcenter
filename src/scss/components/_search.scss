@@ -1,0 +1,84 @@
+// Search Component
+.search-wrapper {
+  margin: auto;
+  max-width: 650px;
+  position: relative;
+}
+
+.searchbox {
+  position: relative;
+
+  input {
+    width: 100%;
+    font-size: 1.5em;
+    height: 2em;
+    padding: 0 1em;
+    border: 0px;
+    border-radius: $border-radius-sm;
+    color: #000;
+
+    &::placeholder {
+      opacity: 0.8;
+    }
+
+    // Clear 'X' from Chrome
+    &[type="search"]::-webkit-search-decoration,
+    &[type="search"]::-webkit-search-cancel-button,
+    &[type="search"]::-webkit-search-results-button,
+    &[type="search"]::-webkit-search-results-decoration {
+      display: none;
+    }
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    position: absolute;
+    transform: translate(0%, -50%);
+    right: 2%;
+    top: 50%;
+
+    i {
+      font-size: 2em;
+      font-weight: 900;
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+.search-results {
+  font-size: 1.2em;
+  line-height: 1.5em;
+  width: 100%;
+  background: $background-color;
+  position: absolute;
+  z-index: 3;
+  border-radius: $border-radius-md;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+  #search-results > div:not(.spinner-loader) {
+    padding: 0 1em;
+    border-top: solid 1px $border-color;
+  }
+}
+
+// Spinner Animation
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-loader {
+  margin: 5px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid $primary-color;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  margin: 20px auto;
+}

@@ -1,0 +1,36 @@
+// SCSS Variables für Supportcenter Plugin
+// Farben
+$primary-color: #007cba;
+$secondary-color: #666;
+$accent-color: #f0f0f1;
+$text-color: #333;
+$background-color: #fff;
+$border-color: #ddd;
+
+// Breakpoints
+$mobile: 320px;
+$tablet: 768px;
+$desktop: 1024px;
+$large-desktop: 1200px;
+$xl-desktop: 1920px;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+
+// Typography
+$font-family-base: "lato", sans-serif;
+$font-size-base: calc(14px + 2 * (100vw - 320px) / 1600);
+$line-height-base: 1.5;
+
+// Border radius
+$border-radius-sm: 5px;
+$border-radius-md: 10px;
+$border-radius-lg: 30px;
+
+// Container
+$container-width: 90%;
+$container-max-width: 1200px;
