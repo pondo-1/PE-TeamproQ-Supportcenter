@@ -7,9 +7,9 @@ function get_scroll_button_html(){
   </svg>';
   $up_arrow_icon = '<div class="up_arrow_icon">'.$up_arrow_icon.'</div>';
   $scroll_button_html = '
-    <div class="scroll-buttons">
-      <button onclick="scrollToTop()" id="btnUP" title="Go to top">'.$up_arrow_icon.'</button>
-    </div>
+   <button class="scrollup-button btn btn--fill" id="btnUP" title="Go to top">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
   ';
 return $scroll_button_html;
 }
