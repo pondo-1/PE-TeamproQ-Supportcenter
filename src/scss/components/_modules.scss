@@ -1,3 +1,25 @@
+//Patch for icon class names
+
+//immobilienberechnung
+.icon-icon-berechnungen::before {
+  content: "\e809";
+}
+
+//vermietungsliste
+.icon-icon-vermietung::before {
+  content: "\e81b";
+}
+
+//managementdashboard
+.icon-icon-dashboard::before {
+  content: "\e80f";
+}
+
+//administration
+.icon-icon-admin::before {
+  content: "\e80f";
+}
+
 // Module Overview Component
 .module-ueberblick {
   padding: 4em;
