@@ -104,11 +104,14 @@ function supportcenter_header()
   ';
 
   if (is_archive('supportcenter')) {
-    $header_title = '
-    <div class="supportcenter_title_container container">
+
+
+    $header_title = '<div class="outter-container p-top--medium p-bottom--medium">
+    <div class="container ">
+    <div class="supportcenter_title_container">
       <h1 class="entry-title">Supportcenter Überblick</h1>
-    </div>
-  ';
+      </div>
+      </div>';
   }
 
   //for supportcenter ctp and only for modul
@@ -152,9 +155,10 @@ function supportcenter_module_ueberblick()
             <div class="icon-and-capture">
               <span class="icon-icon-' . get_post_field('post_name', $postId) . '"></span>
             </div>
-          </a>
+          
           <p class="modul-icon-label">' . get_the_title($postId) . '</p>
-        </div>
+        </a>
+          </div>
         ';
     }
   }

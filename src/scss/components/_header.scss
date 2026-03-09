@@ -1,5 +1,6 @@
 // Supportcenter Header Component
 .supportcenter_header {
+  overflow: visible !important;
   .supportcenter_title_container {
     h1.entry-title {
       font-family: $font-family-base;

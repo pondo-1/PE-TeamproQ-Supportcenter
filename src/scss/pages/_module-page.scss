@@ -9,9 +9,22 @@
   padding-bottom: 2em;
 
   .icon-and-capture {
+    background-color: $background-color;
     width: 160px;
     height: 160px;
-    background-color: $background-light;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    [class*="icon-"] {
+      &::before {
+        // width: 160px;
+        // height: 160px;
+        font-size: 100px;
+        color: $primary-dark;
+      }
+    }
   }
 
   .modul_content {
@@ -51,15 +64,15 @@
             opacity: 0.8;
           }
 
-          &::after {
-            content: "\f077";
-            font-family: "FontAwesome";
-            display: inline-block;
-            transform: rotate(90deg);
-            position: relative;
-            left: 0.3em;
-            font-size: 0.8em;
-          }
+          // &::after {
+          //   content: "\f077";
+          //   font-family: "FontAwesome";
+          //   display: inline-block;
+          //   transform: rotate(90deg);
+          //   position: relative;
+          //   left: 0.3em;
+          //   font-size: 0.8em;
+          // }
         }
       }
 

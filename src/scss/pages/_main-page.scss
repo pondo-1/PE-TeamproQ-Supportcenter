@@ -1,1 +1,49 @@
 // Main Page Styles
+// Module Overview Component
+.module-ueberblick {
+  padding: 4em;
+  margin-bottom: 4em;
+
+  > h2 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 1em;
+    text-align: center;
+  }
+
+  .module {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: auto;
+    gap: 1em;
+    max-width: 55em;
+
+    .icon-text-wrapper {
+      a {
+        background-color: $primary-dark;
+        color: $background-color;
+        padding: 1em;
+        width: 10em;
+        height: 10em;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1em;
+
+        &:hover {
+          background-color: $primary-color;
+        }
+        [class*="icon-icon-"] {
+          font-size: 3em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1em;
+        }
+      }
+    }
+  }
+}
