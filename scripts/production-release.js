@@ -59,7 +59,7 @@ function updateVersion(type = "patch") {
   return { currentVersion, newVersion };
 }
 
-function createProductionZip(version) {
+async function createProductionZip(version) {
   log("📦", "Creating production-ready ZIP package...");
 
   const timestamp = new Date().toISOString().split("T")[0];
@@ -89,7 +89,7 @@ function createProductionZip(version) {
   // Production exclude patterns (WordPress Plugin specific)
   const excludePatterns = [
     "node_modules/*",
-    "src/*",
+    "src/*", 
     "scss/*",
     "scripts/*",
     ".git/*",
@@ -123,59 +123,99 @@ function createProductionZip(version) {
     "quick-setup.sh",
     ".productionignore",
     "package-lock.json",
-    "yarn.lock",
+    "yarn.lock", 
     "composer.lock",
     "CHANGELOG.md",
-    ".deployignore"
+    ".deployignore",
   ];
 
-  const excludeArgs = excludePatterns
-    .map((pattern) => `-x "${pattern}"`)
-    .join(" ");
-  const zipCommand = `cd "${rootDir}" && zip -r "${packagePath}" . ${excludeArgs}`;
+  // Clean up any existing incomplete file
+  if (fs.existsSync(packagePath)) {
+    fs.unlinkSync(packagePath);
+    log("🗑️", "Removed incomplete package file");
+  }
 
   try {
-    execSync(zipCommand, { stdio: "pipe" });
-  } catch (error) {
-    log("⚠️", "Standard zip failed, using alternative method...");
-
-    // Fallback method
+    // Try node archiver method first (more reliable)
     const archiver = require("archiver");
     const output = fs.createWriteStream(packagePath);
     const archive = archiver("zip", { zlib: { level: 9 } });
 
     return new Promise((resolve, reject) => {
+      let hasErrored = false;
+
       output.on("close", () => {
-        const stats = fs.statSync(packagePath);
-        const size = (stats.size / 1024 / 1024).toFixed(2);
-        log("✅", `Production package created: ${packageName}`);
-        log("📊", `Package size: ${size} MB`);
-        resolve(packagePath);
+        if (!hasErrored && fs.existsSync(packagePath)) {
+          const stats = fs.statSync(packagePath);
+          const size = (stats.size / 1024 / 1024).toFixed(2);
+          log("✅", `Production package created: ${packageName}`);
+          log("📊", `Package size: ${size} MB`);
+          log("📁", `Location: ${packagePath}`);
+          log("🎯", "Only the latest version is kept in dist/ directory");
+          resolve(packagePath);
+        } else {
+          reject(new Error("Package creation failed - file missing"));
+        }
       });
 
-      archive.on("error", reject);
+      output.on("error", (err) => {
+        hasErrored = true;
+        log("❌", `Output stream error: ${err.message}`);
+        // Clean up corrupted file
+        if (fs.existsSync(packagePath)) {
+          fs.unlinkSync(packagePath);
+          log("🗑️", "Cleaned up corrupted package file");
+        }
+        reject(err);
+      });
+
+      archive.on("error", (err) => {
+        hasErrored = true;
+        log("❌", `Archive error: ${err.message}`);
+        // Clean up corrupted file
+        if (fs.existsSync(packagePath)) {
+          fs.unlinkSync(packagePath);
+          log("🗑️", "Cleaned up corrupted package file"); 
+        }
+        reject(err);
+      });
+
+      archive.on("warning", (err) => {
+        if (err.code === "ENOENT") {
+          log("⚠️", `Warning: ${err.message}`);
+        } else {
+          hasErrored = true;
+          reject(err);
+        }
+      });
+
       archive.pipe(output);
 
-      // Add all files except excluded ones
+      // Add files with proper WordPress plugin structure
+      const pluginName = path.basename(rootDir);
+      
       archive.glob("**/*", {
         cwd: rootDir,
         ignore: excludePatterns.map((p) => p.replace("/*", "/**")),
+        dot: false,
+      }, { 
+        prefix: `${pluginName}/`
       });
 
       archive.finalize();
     });
+
+  } catch (error) {
+    log("❌", `Package creation failed: ${error.message}`);
+    
+    // Clean up any corrupted file
+    if (fs.existsSync(packagePath)) {
+      fs.unlinkSync(packagePath);
+      log("🗑️", "Cleaned up corrupted package file");
+    }
+    
+    throw error;
   }
-
-  // Get package size
-  const stats = fs.statSync(packagePath);
-  const size = (stats.size / 1024 / 1024).toFixed(2);
-
-  log("✅", `Production package created: ${packageName}`);
-  log("📊", `Package size: ${size} MB`);
-  log("📁", `Location: ${packagePath}`);
-  log("🎯", "Only the latest version is kept in dist/ directory");
-
-  return packagePath;
 }
 
 // Main release process
@@ -217,7 +257,7 @@ async function createProductionRelease() {
     }
 
     // Step 4: Update version
-    logStep(4, 8, "Updating theme version");
+    logStep(4, 8, "Updating plugin version");
     const versionType = process.argv[2] || "patch"; // patch, minor, major
     const { currentVersion, newVersion } = updateVersion(versionType);
 
@@ -249,6 +289,66 @@ async function createProductionRelease() {
       if (fs.existsSync(assetDir)) {
         log("🖼️", "Image assets found");
       }
+
+      log("✅", "Asset optimization completed");
+    } catch (error) {
+      log("⚠️", "Asset optimization skipped:", error.message);
+    }
+
+    // Step 8: Create production package
+    logStep(8, 8, "Creating production ZIP package");
+    const packagePath = await createProductionZip(newVersion);
+
+    // Success summary
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+    log("🎉", "PRODUCTION RELEASE COMPLETED SUCCESSFULLY!");
+    log("⏱️", `Total time: ${duration}s`);
+    log("📦", `Package: ${path.basename(packagePath)}`);
+    log("📍", `Version: ${currentVersion} → ${newVersion}`);
+    log("📁", `Location: ${packagePath}`);
+    log("🚀", "Ready for deployment!");
+
+    return packagePath;
+  } catch (error) {
+    log("💥", "PRODUCTION RELEASE FAILED!");
+    log("❌", error.message);
+    log("🔍", "Check the output above for details");
+
+    // Cleanup on failure
+    const packagePattern = path.join(distDir, "*.zip");
+    try {
+      const glob = require("glob");
+      const corruptedFiles = glob.sync(packagePattern);
+      if (corruptedFiles.length > 0) {
+        log("🗑️", "Cleaning up potentially corrupted files...");
+        corruptedFiles.forEach((file) => {
+          fs.unlinkSync(file);
+          log("❌", `Removed: ${path.basename(file)}`);
+        });
+      }
+    } catch (cleanupError) {
+      log("⚠️", "Could not clean up corrupted files");
+    }
+
+    process.exit(1);
+  }
+}
+
+// Command line interface
+if (require.main === module) {
+  const versionType = process.argv[2];
+  if (versionType && !["patch", "minor", "major"].includes(versionType)) {
+    console.log("❌ Invalid version type. Use: patch, minor, or major");
+    process.exit(1);
+  }
+
+  createProductionRelease().catch((error) => {
+    console.error("💥 Release failed:", error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { createProductionRelease, createProductionZip };
     } catch (error) {
       log("⚠️", "Asset optimization skipped");
     }
