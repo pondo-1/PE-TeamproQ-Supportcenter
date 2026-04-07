@@ -62,8 +62,7 @@ function updateVersion(type = "patch") {
 async function createProductionZip(version) {
   log("📦", "Creating production-ready ZIP package...");
 
-  const timestamp = new Date().toISOString().split("T")[0];
-  const packageName = `resp-tpq-supportcenter-plugin-v${version}-production.zip`;
+  const packageName = `resp-tpq-supportcenter-plugin.zip`;
   const packagePath = path.join(distDir, packageName);
 
   // Ensure dist directory exists
@@ -89,7 +88,7 @@ async function createProductionZip(version) {
   // Production exclude patterns (WordPress Plugin specific)
   const excludePatterns = [
     "node_modules/*",
-    "src/*", 
+    "src/*",
     "scss/*",
     "scripts/*",
     ".git/*",
@@ -123,7 +122,7 @@ async function createProductionZip(version) {
     "quick-setup.sh",
     ".productionignore",
     "package-lock.json",
-    "yarn.lock", 
+    "yarn.lock",
     "composer.lock",
     "CHANGELOG.md",
     ".deployignore",
@@ -136,84 +135,41 @@ async function createProductionZip(version) {
   }
 
   try {
-    // Try node archiver method first (more reliable)
-    const archiver = require("archiver");
-    const output = fs.createWriteStream(packagePath);
-    const archive = archiver("zip", { zlib: { level: 9 } });
+    // Use native zip command (most reliable)
+    const pluginFolderName = path.basename(rootDir);
+    const parentDir = path.dirname(rootDir);
 
-    return new Promise((resolve, reject) => {
-      let hasErrored = false;
+    // Create exclude arguments for zip command
+    const excludeArgs = excludePatterns
+      .map((pattern) => `-x "${pluginFolderName}/${pattern}"`)
+      .join(" ");
 
-      output.on("close", () => {
-        if (!hasErrored && fs.existsSync(packagePath)) {
-          const stats = fs.statSync(packagePath);
-          const size = (stats.size / 1024 / 1024).toFixed(2);
-          log("✅", `Production package created: ${packageName}`);
-          log("📊", `Package size: ${size} MB`);
-          log("📁", `Location: ${packagePath}`);
-          log("🎯", "Only the latest version is kept in dist/ directory");
-          resolve(packagePath);
-        } else {
-          reject(new Error("Package creation failed - file missing"));
-        }
-      });
+    // Create zip from parent directory to ensure correct WordPress structure
+    const zipCommand = `cd "${parentDir}" && zip -r "${packagePath}" "${pluginFolderName}" ${excludeArgs}`;
 
-      output.on("error", (err) => {
-        hasErrored = true;
-        log("❌", `Output stream error: ${err.message}`);
-        // Clean up corrupted file
-        if (fs.existsSync(packagePath)) {
-          fs.unlinkSync(packagePath);
-          log("🗑️", "Cleaned up corrupted package file");
-        }
-        reject(err);
-      });
+    log("🔄", "Creating ZIP package with native zip command...");
+    execSync(zipCommand, { stdio: "pipe" });
 
-      archive.on("error", (err) => {
-        hasErrored = true;
-        log("❌", `Archive error: ${err.message}`);
-        // Clean up corrupted file
-        if (fs.existsSync(packagePath)) {
-          fs.unlinkSync(packagePath);
-          log("🗑️", "Cleaned up corrupted package file"); 
-        }
-        reject(err);
-      });
-
-      archive.on("warning", (err) => {
-        if (err.code === "ENOENT") {
-          log("⚠️", `Warning: ${err.message}`);
-        } else {
-          hasErrored = true;
-          reject(err);
-        }
-      });
-
-      archive.pipe(output);
-
-      // Add files with proper WordPress plugin structure
-      const pluginName = path.basename(rootDir);
-      
-      archive.glob("**/*", {
-        cwd: rootDir,
-        ignore: excludePatterns.map((p) => p.replace("/*", "/**")),
-        dot: false,
-      }, { 
-        prefix: `${pluginName}/`
-      });
-
-      archive.finalize();
-    });
-
+    if (fs.existsSync(packagePath)) {
+      const stats = fs.statSync(packagePath);
+      const size = (stats.size / 1024 / 1024).toFixed(2);
+      log("✅", `Production package created: ${packageName}`);
+      log("📊", `Package size: ${size} MB`);
+      log("📁", `Location: ${packagePath}`);
+      log("🎯", "Ready for WordPress deployment!");
+      return packagePath;
+    } else {
+      throw new Error("ZIP file was not created");
+    }
   } catch (error) {
     log("❌", `Package creation failed: ${error.message}`);
-    
+
     // Clean up any corrupted file
     if (fs.existsSync(packagePath)) {
       fs.unlinkSync(packagePath);
       log("🗑️", "Cleaned up corrupted package file");
     }
-    
+
     throw error;
   }
 }
@@ -252,13 +208,12 @@ async function createProductionRelease() {
           "Could not auto-fix all issues. Proceeding with production release...",
         );
         log("💡", "Consider fixing lint issues manually after release");
-        // Don't throw error - continue with release
       }
     }
 
     // Step 4: Update version
     logStep(4, 8, "Updating plugin version");
-    const versionType = process.argv[2] || "patch"; // patch, minor, major
+    const versionType = process.argv[2] || "patch";
     const { currentVersion, newVersion } = updateVersion(versionType);
 
     // Step 5: Run tests (if available)
@@ -276,16 +231,14 @@ async function createProductionRelease() {
       "Building for production",
     );
 
-    // Step 7: Optimize assets (if tools available)
+    // Step 7: Optimize assets
     logStep(7, 8, "Optimizing assets");
     try {
-      // Minify CSS if postcss is available
       if (fs.existsSync(path.join(rootDir, "build/index.css"))) {
         log("🎨", "CSS build found and optimized");
       }
 
-      // Optimize images if imagemin is available
-      const assetDir = path.join(rootDir, "asset/img");
+      const assetDir = path.join(rootDir, "includes/view/asset");
       if (fs.existsSync(assetDir)) {
         log("🖼️", "Image assets found");
       }
@@ -312,18 +265,15 @@ async function createProductionRelease() {
   } catch (error) {
     log("💥", "PRODUCTION RELEASE FAILED!");
     log("❌", error.message);
-    log("🔍", "Check the output above for details");
 
     // Cleanup on failure
-    const packagePattern = path.join(distDir, "*.zip");
     try {
-      const glob = require("glob");
-      const corruptedFiles = glob.sync(packagePattern);
-      if (corruptedFiles.length > 0) {
+      const files = fs.readdirSync(distDir).filter((f) => f.endsWith(".zip"));
+      if (files.length > 0) {
         log("🗑️", "Cleaning up potentially corrupted files...");
-        corruptedFiles.forEach((file) => {
-          fs.unlinkSync(file);
-          log("❌", `Removed: ${path.basename(file)}`);
+        files.forEach((file) => {
+          fs.unlinkSync(path.join(distDir, file));
+          log("❌", `Removed: ${file}`);
         });
       }
     } catch (cleanupError) {
@@ -349,33 +299,3 @@ if (require.main === module) {
 }
 
 module.exports = { createProductionRelease, createProductionZip };
-    } catch (error) {
-      log("⚠️", "Asset optimization skipped");
-    }
-
-    // Step 8: Create production package
-    logStep(8, 8, "Creating production ZIP package");
-    const packagePath = await createProductionZip(newVersion);
-
-    // Success summary
-    const endTime = Date.now();
-    const duration = ((endTime - startTime) / 1000).toFixed(2);
-
-    log("🎉", "PRODUCTION RELEASE COMPLETED!");
-    log("⏱️", `Total time: ${duration}s`);
-    log("📦", `Package: ${path.basename(packagePath)}`);
-    log("🏷️", `Version: ${currentVersion} → ${newVersion}`);
-    log("💡", "Ready for production deployment!");
-  } catch (error) {
-    log("❌", "Production release failed!");
-    log("🔍", `Error: ${error.message}`);
-    process.exit(1);
-  }
-}
-
-// Run the release process
-if (require.main === module) {
-  createProductionRelease();
-}
-
-module.exports = { createProductionRelease };
