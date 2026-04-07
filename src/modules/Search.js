@@ -77,7 +77,7 @@ class Search {
     //         ${results.map(
     //           item => `
     //             <div><a class="scrollLink"
-    //             href="${this.currentPageModul==item.modul.slug ? '': `${this.rootUrl}/supportcenter/${item.modul.slug}`}#${item.slug}">${item.title} - ${item.modul.name}
+    //             href="${this.currentPageModul==item.modul.slug ? '': `${this.rootUrl}/teamproq-supportcenter/${item.modul.slug}`}#${item.slug}">${item.title} - ${item.modul.name}
     //             </a></div>`
     //           ).join("")}
     //         `;
@@ -105,7 +105,7 @@ class Search {
                 href="${
                   this.currentPageModul == item.modul.slug
                     ? ""
-                    : `${this.rootUrl}/supportcenter/${item.modul.slug}`
+                    : `${this.rootUrl}/teamproq-supportcenter/${item.modul.slug}`
                 }#${item.slug}">
                 ${item.title} - ${item.modul.name}
               </a>

@@ -67,7 +67,7 @@ function supportcenter_header()
   // Breadcrumbs generation
   $breadcrumbs = "";
   $bc_startseite = '<a class="breadcrumb-item" href="/">Startseite</a>';
-  $bc_supportcenter = '<a class="breadcrumb-item" href="/supportcenter/">Supportcenter</a>';
+  $bc_supportcenter = '<a class="breadcrumb-item" href="/teamproq-supportcenter/">TeamProQ Supportcenter</a>';
 
   if (is_singular('supportcenter')) {
     $breadcrumbs .= '<div>' . $bc_supportcenter . '</div>';
@@ -104,12 +104,17 @@ function supportcenter_header()
   ';
 
   if (is_archive('supportcenter')) {
+    // Holt den Text aus dem ACF Options Field
+    $content = get_field('einstiegstext_supportcenter', 'option');
+    $archiv_description = !empty($content) ? '<div class="modul-description"><div class="modul_content">' .  $content . '</div></div>' : '';
 
 
     $header_title = '<div class="outter-container p-top--medium p-bottom--medium">
     <div class="container ">
     <div class="supportcenter_title_container">
-      <h1 class="entry-title">Supportcenter Überblick</h1>
+      <h1 class="entry-title">TeamProQ Supportcenter Überblick</h1>
+
+      <div>' . $archiv_description . '</div>
       </div>
       </div>';
   }

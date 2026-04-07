@@ -96,7 +96,7 @@ class PE_Initializ_CTP
       // Default: true – set to $post_type, let it default, ‘string’ – /?{query_var_string}={single_post_slug} will work as intended.
       // 'query_var'          => false,
       // alllow rewrite, Default: true and use $post_type as slug, let it defualt
-      // 'rewrite'            => array( 'slug' => ''),
+      'rewrite'            => array('slug' => 'teamproq-supportcenter'),
       'capability_type'    => 'post',
       'has_archive'        => true,
       'hierarchical'       => true,

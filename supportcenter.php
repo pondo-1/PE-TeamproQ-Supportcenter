@@ -3,7 +3,7 @@
 Plugin Name: Customized Supportcenter - TeamProQ by Page-Effect 
 Plugin URI: 
 Description: This plugin for customized supportcenter pages
-Version: 1.0.3
+Version: 1.0.4
 Author: Page-Effect 
 Author URI: page-effect.de
 */
@@ -14,7 +14,7 @@ if (! defined('PE_supportcenter_Plugin_Path')) {
   define('PE_supportcenter_Plugin_Path', plugin_dir_path(__FILE__));
 }
 // Supportcenter main page slug 
-define('PE_SC_Main_Page_slug', 'supportcenter');
+define('PE_SC_Main_Page_slug', 'teamproq-supportcenter');
 define('PE_SC_CTP_name', 'supportcenter');
 
 //Generate new Custom type Post: supportcenter, new column in admin, filter for modul  /////////////////// 
@@ -91,3 +91,17 @@ class PE_style_and_js
   }
 }
 $pe_style_and_js = new PE_style_and_js();
+
+
+// Create Settings Page for Supportcenter in WP Admin, where the admin can add a description for the Supportcenter Main Page (Archive) using ACF Pro plugin. The description will be displayed on the Supportcenter Main Page (Archive) above the module overview.
+add_action('acf/init', function () {
+  if (function_exists('acf_add_options_page')) {
+    acf_add_options_page(array(
+      'page_title' => 'Supportcenter Einstellungen',
+      'menu_title' => 'Einstiegstext',
+      'menu_slug' => 'supportcenter-options',
+      'parent_slug' => 'edit.php?post_type=supportcenter',
+      'capability' => 'edit_posts',
+    ));
+  }
+});
