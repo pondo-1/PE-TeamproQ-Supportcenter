@@ -1,5 +1,10 @@
 //Patch for icon class names
 
+//verkaufslisten
+.main .icon-icon-verkauf::before {
+  content: "\e819";
+}
+
 //immobilienberechnung
 .icon-icon-berechnungen::before {
   content: "\e809";
