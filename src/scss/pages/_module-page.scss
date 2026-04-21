@@ -7,6 +7,10 @@
   justify-content: flex-start;
   align-items: center;
   padding-bottom: 2em;
+  @media screen and (max-width: 900px) {
+    gap: unset;
+    flex-direction: column;
+  }
 
   .icon-and-capture {
     background-color: $background-color;
@@ -33,6 +37,10 @@
     font-weight: 700;
     width: 100%;
     max-width: 800px;
+
+    @media screen and (max-width: 900px) {
+      padding-top: 20px;
+    }
   }
 }
 
@@ -48,9 +56,16 @@
         no-repeat;
       background-position: 35% 0;
       margin-right: 8vw;
+      @media screen and (max-width: 900px) {
+        background: none;
+      }
 
       .title-wrapper {
         grid-column: 1/2;
+
+        @media screen and (max-width: 900px) {
+          grid-column: 1/-1;
+        }
         li {
           list-style: none;
           font-size: 1.2em;
@@ -78,6 +93,10 @@
 
       .qanda-wrapper {
         grid-column: 2/3;
+
+        @media screen and (max-width: 900px) {
+          grid-column: 1/-1;
+        }
         ul {
           margin-left: 1rem;
         }
@@ -106,40 +125,5 @@
         }
       }
     }
-  }
-}
-
-// Responsive Design
-@media screen and (max-width: 900px) {
-  .modul-description {
-    gap: unset;
-  }
-
-  .q_and_a_contents {
-    display: grid;
-    grid-template-columns: 1fr;
-    background: unset;
-  }
-}
-
-@media screen and (max-width: 640px) {
-  .modul-description div:nth-child(2) {
-    font-size: 1.2em;
-    width: unset;
-  }
-
-  .q_and_a_contents {
-    margin-right: unset;
-  }
-
-  .qanda-wrapper .single .question {
-    font-size: 1.7em;
-  }
-}
-
-@media screen and (max-width: 450px) {
-  .modul-description {
-    flex-direction: column;
-    padding: 2em 0em 3em 0em;
   }
 }
