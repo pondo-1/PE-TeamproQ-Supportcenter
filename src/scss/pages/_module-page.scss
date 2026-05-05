@@ -97,12 +97,10 @@
         @media screen and (max-width: 900px) {
           grid-column: 1/-1;
         }
-        ul {
-          margin-left: 1rem;
-        }
-
+        ul,
         ol {
-          margin-left: 2rem;
+          margin-left: 1rem;
+          padding-bottom: 1rem;
         }
 
         .single {
@@ -117,6 +115,10 @@
           .answer {
             font-size: 1.1em;
             padding-bottom: 5em;
+
+            p {
+              font-size: 1.1em;
+            }
 
             img {
               margin: 20px;

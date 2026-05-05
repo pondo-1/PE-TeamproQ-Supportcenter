@@ -40,6 +40,9 @@ class PE_Initializ_CTP
     //create custom taxonomies 
     //hook into the init action and call create_taxonomies when it fires
     add_action('init', array($this, 'create_custom_taxonomies'));
+
+    // Automatisch Child-Posts auf privat setzen
+    add_action('save_post', array($this, 'set_child_posts_to_private'), 10, 3);
   }
 
   function cbt_admin_posts_filter($query)
@@ -216,6 +219,45 @@ class PE_Initializ_CTP
       ));
     }
     return $unternehmen_geojson;
+  }
+
+  /**
+   * Automatisch Child-Posts auf privat setzen
+   * Diese Funktion wird ausgeführt, wenn ein Post gespeichert wird
+   */
+  function set_child_posts_to_private($post_id, $post, $update)
+  {
+    // Autosaves und Revisionen ignorieren
+    if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+      return;
+    }
+
+    // Nur für supportcenter Post-Type
+    if ($post->post_type !== 'supportcenter') {
+      return;
+    }
+
+    // Nur für Child-Posts (haben einen Parent)
+    if ($post->post_parent == 0) {
+      return;
+    }
+
+    // Nur wenn der Post noch nicht privat ist
+    if ($post->post_status === 'private') {
+      return;
+    }
+
+    // Infinite Loop vermeiden - remove_action vor wp_update_post
+    remove_action('save_post', array($this, 'set_child_posts_to_private'), 10);
+
+    // Post auf privat setzen
+    wp_update_post(array(
+      'ID' => $post_id,
+      'post_status' => 'private'
+    ));
+
+    // Action wieder hinzufügen
+    add_action('save_post', array($this, 'set_child_posts_to_private'), 10, 3);
   }
 }
 
